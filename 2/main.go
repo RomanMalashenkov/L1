@@ -3,21 +3,28 @@
 чисел, взятых из массива (2,4,6,8,10), и выведет их квадраты в Stdout
 */
 
-package t2
+package main
 
 import (
 	"fmt"
-	"time"
+	"sync"
 )
 
-func t2() {
+func square(n int, wg *sync.WaitGroup) {
+	defer wg.Done()
+	n *= n
+	fmt.Println(n)
+}
+
+func main() {
 	bas := [5]int{2, 4, 6, 8, 10}
 
+	var wg sync.WaitGroup
+	wg.Add(len(bas))
+
 	for _, v := range bas {
-		go func(n int) {
-			n *= n
-			fmt.Println(n)
-		}(v)
+		go square(v, &wg)
 	}
-	time.Sleep(30 * time.Millisecond)
+
+	wg.Wait()
 }
