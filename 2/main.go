@@ -8,23 +8,22 @@ package main
 import (
 	"fmt"
 	"sync"
+	"time"
 )
 
-func square(n int, wg *sync.WaitGroup) {
-	defer wg.Done()
-	n *= n
-	fmt.Println(n)
+func square(n int, mu *sync.Mutex) {
+	mu.Lock()
+	fmt.Println(n * n)
+	mu.Unlock()
 }
 
 func main() {
 	bas := [5]int{2, 4, 6, 8, 10}
-
-	var wg sync.WaitGroup
-	wg.Add(len(bas))
+	var mu sync.Mutex
 
 	for _, v := range bas {
-		go square(v, &wg)
+		go square(v, &mu)
 	}
 
-	wg.Wait()
+	time.Sleep(1 * time.Millisecond)
 }

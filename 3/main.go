@@ -21,8 +21,7 @@ func main() {
 	for _, v := range bas {
 		go func(n int) {
 			mu.Lock()
-			m := n * n
-			sl = append(sl, m)
+			sl = append(sl, n*n)
 			mu.Unlock()
 		}(v)
 	}
